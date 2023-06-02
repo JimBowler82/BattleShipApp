@@ -72,7 +72,7 @@ namespace BattleShipLibrary
             
         }
 
-        private static bool ValidateShipLocation(PlayerInfoModel model, string row, int column)
+        public static bool ValidateShipLocation(PlayerInfoModel model, string row, int column)
         {
             bool isValidLocation = true;
 

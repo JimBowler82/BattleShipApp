@@ -20,6 +20,8 @@ namespace BattleShipLite
 
             do
             {
+                Console.WriteLine($"Active Player: {activePlayer.UsersName}\n");
+
                 DisplayShotGrid(activePlayer);
 
                 RecordPlayerShot(activePlayer, opponent);
@@ -57,8 +59,6 @@ namespace BattleShipLite
             bool isValidShot = false;
             string row = "";
             int column = 0;
-
-            Console.WriteLine($"Active Player: {activePlayer.UsersName}");
 
             do
             {
@@ -104,17 +104,22 @@ namespace BattleShipLite
         {
             string currentRow = activePlayer.ShotGrid[0].SpotLetter;
 
+            Console.WriteLine($"     1   2   3   4   5\n");
+
+            Console.Write($" {currentRow}  ");
+
             foreach (var gridSpot in activePlayer.ShotGrid)
             {
                 if (gridSpot.SpotLetter != currentRow)
                 {
                     Console.WriteLine();
                     currentRow = gridSpot.SpotLetter;
+                    Console.Write($" {currentRow}  ");
                 }
 
                 if (gridSpot.Status == GridSpotStatus.Empty)
                 {
-                    Console.Write($" {gridSpot.SpotLetter}{gridSpot.SpotNumber} ");
+                    Console.Write($" -  ");
                 }
                 else if (gridSpot.Status == GridSpotStatus.Hit)
                 {
@@ -165,9 +170,14 @@ namespace BattleShipLite
 
         private static void PlaceShips(PlayerInfoModel model)
         {
+            Console.Clear();
+
             do
             {
+                Console.WriteLine($"Active PLayer: {model.UsersName}");
+                Console.WriteLine("\nPlace Your Ships\n");
 
+                DisplayPlayerShipsGrid(model);
                 Console.Write($"Where do you want to place ship number {model.ShipLocations.Count + 1}: ");
                 string location = Console.ReadLine();
 
@@ -189,8 +199,47 @@ namespace BattleShipLite
                     Console.WriteLine("That was not a valid location.  Please try again.");
                 }
 
-
+                Console.Clear();
             } while (model.ShipLocations.Count < 5 );
+
+            Console.WriteLine($"Active PLayer: {model.UsersName}");
+            Console.WriteLine("Here are your ship placements\n");
+            DisplayPlayerShipsGrid(model);
+            Console.Write("\n([Enter] to continue ...)");
+            Console.ReadLine();
+        }
+
+        private static void DisplayPlayerShipsGrid(PlayerInfoModel model)
+        {
+            string currentRow = model.ShotGrid[0].SpotLetter;
+
+            Console.WriteLine($"     1   2   3   4   5\n");
+
+            Console.Write($" {currentRow}  ");
+
+            foreach (var gridSpot in model.ShotGrid)
+            {
+                if (gridSpot.SpotLetter != currentRow)
+                {
+                    Console.WriteLine();
+                    currentRow = gridSpot.SpotLetter;
+                    Console.Write($" {currentRow}  ");
+                }
+
+                bool availableLocation = GameLogic.ValidateShipLocation(model, gridSpot.SpotLetter, gridSpot.SpotNumber);
+
+                if (!availableLocation)
+                {
+                    Console.Write($" S  ");
+                }
+                else 
+                {
+                    Console.Write(" -  ");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine();
         }
     }
 }
